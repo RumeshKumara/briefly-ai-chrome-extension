@@ -23,11 +23,11 @@ body {
         border-radius: 4px;
       }
       button {
-        background-color: #4285f4;
+        background-color: #da3b3b;
         color: white;
         border: none;
         padding: 10px 15px;
-        border-radius: 4px;
+        border-radius: 8px;
         cursor: pointer;
       }
       button:hover {
