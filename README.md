@@ -1,5 +1,7 @@
 # Briefly AI - AI-Powered Web Page Summarizer Chrome Extension
 
+![Logo](https://github.com/RumeshKumara/briefly-ai-chrome-extension/blob/main/Thumbnail-1.jpg?raw=true)
+
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-brightgreen)](https://chromewebstore.google.com/) *(Coming soon!)*  
 🚀 **Summarize any web page in one click** using Google's Gemini AI. Fast, clean, and privacy-focused—no data leaves your browser except for API calls.
 
