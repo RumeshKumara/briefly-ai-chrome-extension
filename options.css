@@ -38,3 +38,23 @@ body {
         margin-top: 10px;
         display: none;
       }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding: 20px;
+      }
+
+      
+
+      .header h1 {
+        color: rgb(37, 37, 37);
+        margin: 0;
+        font-size: 30px;
+        font-family: poppins, sans-serif;
+        font-weight: 800;
+      }
+
+     
