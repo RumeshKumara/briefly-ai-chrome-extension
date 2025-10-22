@@ -65,15 +65,16 @@ Briefly AI is a lightweight Chrome extension that extracts text from the active 
 *(Add these to your repo for visuals!)*
 
 - **Popup Overview**:
-  ![Popup](screenshots/popup-summarize.png)  
+  ![Popup](https://github.com/RumeshKumara/briefly-ai-chrome-extension/blob/f48964046de20d3c6376a410be019c0bdeee36f6/Summarize-1.jpg)  
+  ![Popup](https://github.com/RumeshKumara/briefly-ai-chrome-extension/blob/f48964046de20d3c6376a410be019c0bdeee36f6/Summarize%20-%2002-1.jpg)  
   *Summarize tab with dropdown, button, and output.*
 
 - **History Tab**:
-  ![History](screenshots/popup-history.png)  
+  ![History](https://github.com/RumeshKumara/briefly-ai-chrome-extension/blob/f48964046de20d3c6376a410be019c0bdeee36f6/History-1.jpg)  
   *List of saved summaries with delete options.*
 
 - **Settings Tab**:
-  ![Settings](screenshots/popup-settings.png)  
+  ![Settings](https://github.com/RumeshKumara/briefly-ai-chrome-extension/blob/f48964046de20d3c6376a410be019c0bdeee36f6/Settings-1.jpg)  
   *API key input and save confirmation.*
 
 ## 🔧 Development & Customization
