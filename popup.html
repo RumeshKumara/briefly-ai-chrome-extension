@@ -35,11 +35,40 @@
         </svg>
         <span>Generate Summary</span>
       </button>
-      <button id="copy-btn">Copy</button>
     </div>
 
     <div id="result">
       Select a summary type and click 'Generate Summary' to generate a summary.
+      <button id="copy-btn">Copy</button>
+
+      <style>
+        /* Ensure the result container is a positioning context */
+        #result {
+          position: relative;
+        }
+
+        /* Place the copy button fixed to the bottom-right inside #result */
+        #copy-btn {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          z-index: 10;
+          padding: 6px 10px;
+          font-size: 10px;
+          cursor: pointer;
+        }
+
+        /* Optional small visual tweak to keep button visible on varied backgrounds */
+        #copy-btn {
+          background: #1800ad;
+          color: #fff;
+          border: none;
+          border-radius: 100px;
+        }
+        #copy-btn:hover {
+          opacity: 0.95;
+        }
+      </style>
     </div>
 
     <script src="config.js"></script>

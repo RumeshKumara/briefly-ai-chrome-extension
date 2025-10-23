@@ -1,10 +1,16 @@
+:root {
+  /* subtle global letter-spacing applied to most text */
+  --letter-spacing: 0.02em;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  min-width: 500px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  min-width: 400px;
   min-height: 300px;
   padding: 15px;
   box-sizing: border-box;
   border-radius: 20px;
+  letter-spacing: var(--letter-spacing);
 }
 
 .header {
@@ -29,14 +35,15 @@ body {
       .new-tag {
         position: absolute;
         top: 20px;
-        right: 275px;
+        right: 175px;
         background-color: rgb(255, 179, 3);
         color: white;
         padding: 4px 10px;
         font-size: 11px;
         font-weight: semi-bold;
         border-radius: 100px;
-        letter-spacing: 1px;
+        /* use the global letter-spacing for consistency */
+        letter-spacing: var(--letter-spacing);
       }
 
 h2 {
@@ -60,7 +67,7 @@ button {
   font-weight: bold;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  letter-spacing: var(--letter-spacing);
   transition: background-color 0.3s ease;
 
 }
@@ -69,17 +76,7 @@ button:hover {
   background-color: rgba(219, 26, 26, 0.8);
 }
 
-#copy-btn {
-  background-color: #1800ad;
-  color: #fff;
-  font-weight: bold;
-  border-radius: 100px;
-  transition: background-color 0.3s ease;
-}
 
-#copy-btn:hover {
-  background-color: #1a00c1;
-}
 
 #summary-type {
   padding: 8px;
@@ -105,6 +102,13 @@ button:hover {
   height: 16px;
   display: inline-block;
   vertical-align: middle;
+}
+
+/* Exclude icon fonts and SVG icons from global letter-spacing to avoid visual artifacts */
+.material-symbols-outlined,
+.btn-icon,
+.btn-icon * {
+  letter-spacing: normal !important;
 }
 
 /* Use currentColor so the icon matches the button text color */
