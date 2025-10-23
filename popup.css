@@ -61,6 +61,8 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  transition: background-color 0.3s ease;
+
 }
 
 button:hover {
@@ -68,11 +70,15 @@ button:hover {
 }
 
 #copy-btn {
-  background-color: #34a853;
+  background-color: #1800ad;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 100px;
+  transition: background-color 0.3s ease;
 }
 
 #copy-btn:hover {
-  background-color: #2e8b57;
+  background-color: #1a00c1;
 }
 
 #summary-type {
