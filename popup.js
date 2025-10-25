@@ -1,13 +1,18 @@
 document.getElementById("summarize").addEventListener("click", async () => {
-  const resultDiv = document.getElementById("result");
-  resultDiv.innerHTML = '<div class="loading"><div class="loader"></div></div>';
+  const summaryContent = document.getElementById("summary-content");
+  const copyBtn = document.getElementById("copy-btn");
+
+  // Hide copy button while loading
+  copyBtn.style.display = "none";
+
+  summaryContent.innerHTML = '<div class="loading"><div class="loader"></div></div>';
 
   const summaryType = document.getElementById("summary-type").value;
 
   // Get API key from storage
   chrome.storage.sync.get(["geminiApiKey"], async (result) => {
     if (!result.geminiApiKey) {
-      resultDiv.innerHTML =
+      summaryContent.innerHTML =
         "API key not found. Please set your API key in the extension options.";
       return;
     }
@@ -18,7 +23,7 @@ document.getElementById("summarize").addEventListener("click", async () => {
         { type: "GET_ARTICLE_TEXT" },
         async (res) => {
           if (!res || !res.text) {
-            resultDiv.innerText =
+            summaryContent.innerText =
               "Could not extract article text from this page.";
             return;
           }
@@ -29,11 +34,15 @@ document.getElementById("summarize").addEventListener("click", async () => {
               summaryType,
               result.geminiApiKey
             );
-            resultDiv.innerText = summary;
+            summaryContent.innerHTML = formatSummary(summary, summaryType);
+
+            // Show copy button after summary is generated
+            copyBtn.style.display = "block";
           } catch (error) {
-            resultDiv.innerText = `Error: ${
-              error.message || "Failed to generate summary."
-            }`;
+            summaryContent.innerText = `Error: ${error.message || "Failed to generate summary."
+              }`;
+            // Hide copy button on error
+            copyBtn.style.display = "none";
           }
         }
       );
@@ -41,8 +50,53 @@ document.getElementById("summarize").addEventListener("click", async () => {
   });
 });
 
+// Format summary with HTML and modern styling
+function formatSummary(summary, summaryType) {
+  if (summaryType === "detailed") {
+    // Replace emoji headers with styled HTML
+    let formatted = summary
+      .replace(/📌\s*OVERVIEW/gi, '<div class="summary-section"><div class="section-header overview">📌 OVERVIEW</div>')
+      .replace(/🔑\s*KEY INSIGHTS/gi, '</div><div class="summary-section"><div class="section-header insights">🔑 KEY INSIGHTS</div>')
+      .replace(/💡\s*TAKEAWAYS/gi, '</div><div class="summary-section"><div class="section-header takeaways">💡 TAKEAWAYS</div>');
+
+    // Close the last section
+    if (formatted.includes('summary-section')) {
+      formatted += '</div>';
+    }
+
+    // Wrap paragraphs
+    formatted = formatted.replace(/\n\n/g, '</p><p class="summary-text">');
+    formatted = '<p class="summary-text">' + formatted + '</p>';
+
+    return formatted;
+  } else if (summaryType === "bullets") {
+    // Format bullet points with modern styling
+    let formatted = summary
+      .split('\n')
+      .map(line => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('•') || trimmed.startsWith('-') || trimmed.startsWith('*')) {
+          // Remove bullet symbols and wrap in styled div
+          const text = trimmed.replace(/^[•\-*]\s*/, '');
+          return text ? `<div class="bullet-point"><span class="bullet">●</span><span class="bullet-text">${text}</span></div>` : '';
+        }
+        return trimmed ? `<p class="summary-text">${trimmed}</p>` : '';
+      })
+      .filter(line => line !== '')
+      .join('');
+
+    return formatted || summary;
+  } else {
+    // Brief or default - simple paragraph formatting
+    return `<p class="summary-text">${summary.replace(/\n\n/g, '</p><p class="summary-text">')}</p>`;
+  }
+}
+
 document.getElementById("copy-btn").addEventListener("click", () => {
-  const summaryText = document.getElementById("result").innerText;
+  const summaryContent = document.getElementById("summary-content");
+
+  // Extract plain text from HTML content
+  const summaryText = summaryContent.innerText || summaryContent.textContent;
 
   if (summaryText && summaryText.trim() !== "") {
     navigator.clipboard
@@ -71,16 +125,40 @@ async function getGeminiSummary(text, summaryType, apiKey) {
   let prompt;
   switch (summaryType) {
     case "brief":
-      prompt = `Provide a brief summary of the following article in 2-3 sentences:\n\n${truncatedText}`;
+      prompt = `You are a modern content curator creating engaging summaries. Provide a brief, punchy summary of the following article in 2-3 sentences. Make it clear, compelling, and easy to understand. Use active voice and present tense where appropriate:\n\n${truncatedText}`;
       break;
     case "detailed":
-      prompt = `Provide a detailed summary of the following article, covering all main points and key details:\n\n${truncatedText}`;
+      prompt = `You are a modern content curator creating comprehensive summaries. Provide a detailed, well-structured summary of the following article. Use the following format:
+
+📌 OVERVIEW
+[A compelling 1-2 sentence overview]
+
+🔑 KEY INSIGHTS
+[Cover all main points with clear explanations, organized logically]
+
+💡 TAKEAWAYS
+[2-3 practical takeaways or conclusions]
+
+Make it engaging, informative, and easy to scan. Use clear language and maintain a modern, professional tone:\n\n${truncatedText}`;
       break;
     case "bullets":
-      prompt = `Summarize the following article in 5-7 key points. Format each point as a line starting with "- " (dash followed by a space). Do not use asterisks or other bullet symbols, only use the dash. Keep each point concise and focused on a single key insight from the article:\n\n${truncatedText}`;
+      prompt = `You are a modern content curator creating scannable summaries. Extract the most important insights from the following article and present them as 5-7 bullet points.
+
+Format each point as:
+• [Concise, impactful statement of the key insight]
+
+Requirements:
+- Start each bullet with "•" (bullet symbol)
+- Keep each point to 1-2 sentences maximum
+- Use active voice and clear language
+- Make each point standalone and actionable
+- Focus on the most valuable insights
+- Use modern, engaging language
+
+Article to summarize:\n\n${truncatedText}`;
       break;
     default:
-      prompt = `Summarize the following article:\n\n${truncatedText}`;
+      prompt = `You are a modern content curator. Create a clear, engaging summary of the following article. Make it informative and easy to understand, using modern language and active voice:\n\n${truncatedText}`;
   }
 
   try {
