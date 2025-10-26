@@ -15,9 +15,142 @@ document.addEventListener("DOMContentLoaded", () => {
       // Show corresponding tab content
       const tabId = btn.getAttribute("data-tab") + "-tab";
       document.getElementById(tabId).classList.add("active");
+
+      // Load history when History tab is clicked
+      if (btn.getAttribute("data-tab") === "history") {
+        loadHistory();
+      }
     });
   });
+
+  // Load history on initial load
+  loadHistory();
+
+  // Clear history button
+  document.getElementById("clear-history-btn").addEventListener("click", () => {
+    if (confirm("Are you sure you want to clear all history?")) {
+      chrome.storage.local.set({ summaryHistory: [] }, () => {
+        loadHistory();
+      });
+    }
+  });
 });
+
+// Load and display history
+function loadHistory() {
+  chrome.storage.local.get(["summaryHistory"], (result) => {
+    const history = result.summaryHistory || [];
+    const historyList = document.getElementById("history-list");
+
+    if (history.length === 0) {
+      historyList.innerHTML = '<p class="empty-state">No history yet. Generate your first summary!</p>';
+      return;
+    }
+
+    historyList.innerHTML = history
+      .map((item, index) => {
+        const date = new Date(item.timestamp);
+        const formattedDate = formatDate(date);
+        const preview = stripHtml(item.summary).substring(0, 120) + "...";
+
+        return `
+          <div class="history-item" data-index="${index}">
+            <div class="history-item-title">${item.title || "Untitled Summary"}</div>
+            <div class="history-item-preview">${preview}</div>
+            <div class="history-item-meta">
+              <span class="history-item-date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                ${formattedDate}
+              </span>
+              <span class="history-item-type">${formatType(item.type)}</span>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+    // Add click handlers to history items
+    document.querySelectorAll(".history-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const index = item.getAttribute("data-index");
+        viewHistoryItem(history[index]);
+      });
+    });
+  });
+}
+
+// View a history item
+function viewHistoryItem(item) {
+  // Switch to summarize tab
+  document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
+
+  document.querySelector('[data-tab="summarize"]').classList.add("active");
+  document.getElementById("summarize-tab").classList.add("active");
+
+  // Display the summary
+  const summaryContent = document.getElementById("summary-content");
+  const copyBtn = document.getElementById("copy-btn");
+
+  summaryContent.innerHTML = item.summary;
+  copyBtn.style.display = "block";
+}
+
+// Save summary to history
+function saveToHistory(title, summary, type) {
+  chrome.storage.local.get(["summaryHistory"], (result) => {
+    const history = result.summaryHistory || [];
+
+    // Add new item to beginning of array
+    history.unshift({
+      title: title,
+      summary: summary,
+      type: type,
+      timestamp: Date.now()
+    });
+
+    // Keep only last 50 items
+    const trimmedHistory = history.slice(0, 50);
+
+    chrome.storage.local.set({ summaryHistory: trimmedHistory });
+  });
+}
+
+// Helper function to format date
+function formatDate(date) {
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+
+  return date.toLocaleDateString();
+}
+
+// Helper function to format type
+function formatType(type) {
+  const types = {
+    brief: "Brief",
+    detailed: "Detailed",
+    bullets: "Bullets"
+  };
+  return types[type] || "Brief";
+}
+
+// Helper function to strip HTML tags
+function stripHtml(html) {
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+}
 
 document.getElementById("summarize").addEventListener("click", async () => {
   const summaryContent = document.getElementById("summary-content");
@@ -55,7 +188,14 @@ document.getElementById("summarize").addEventListener("click", async () => {
               summaryType,
               result.geminiApiKey
             );
-            summaryContent.innerHTML = formatSummary(summary, summaryType);
+            const formattedSummary = formatSummary(summary, summaryType);
+            summaryContent.innerHTML = formattedSummary;
+
+            // Save to history
+            chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
+              const pageTitle = currentTab.title || "Untitled Page";
+              saveToHistory(pageTitle, formattedSummary, summaryType);
+            });
 
             // Show copy button after summary is generated
             copyBtn.style.display = "block";
