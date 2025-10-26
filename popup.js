@@ -1,3 +1,24 @@
+// Tab Navigation Functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      // Remove active class from all buttons and contents
+      tabBtns.forEach((b) => b.classList.remove("active"));
+      tabContents.forEach((content) => content.classList.remove("active"));
+
+      // Add active class to clicked button
+      btn.classList.add("active");
+
+      // Show corresponding tab content
+      const tabId = btn.getAttribute("data-tab") + "-tab";
+      document.getElementById(tabId).classList.add("active");
+    });
+  });
+});
+
 document.getElementById("summarize").addEventListener("click", async () => {
   const summaryContent = document.getElementById("summary-content");
   const copyBtn = document.getElementById("copy-btn");

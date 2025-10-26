@@ -13,66 +13,90 @@
       <h1>Briefly <span style="color: rgb(241, 52, 52)">AI</span></h1>
     </div>
 
-    <div class="options">
-      <select id="summary-type">
-        <option value="brief">Brief Summary</option>
-        <option value="detailed">Detailed Summary</option>
-        <option value="bullets">Bullet Points</option>
-      </select>
-      <button id="summarize" aria-label="Generate summary">
-        <!-- Flash/bolt icon -->
-        <svg
-          class="btn-icon flash"
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          role="img"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path fill="currentColor" d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
-        </svg>
-        <span>Generate Summary</span>
-      </button>
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" data-tab="summarize">Summarize</button>
+      <button class="tab-btn" data-tab="history">History</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
     </div>
 
-    <div id="result">
-      <div id="summary-content">
-        Select a summary type and click
-        <span style="font-weight: 700; color: #f13737">Generate Summary</span>
-        to generate a summary.
+    <!-- Tab Content -->
+    <div class="tab-content active" id="summarize-tab">
+      <div class="options">
+        <select id="summary-type">
+          <option value="brief">Brief Summary</option>
+          <option value="detailed">Detailed Summary</option>
+          <option value="bullets">Bullet Points</option>
+        </select>
+        <button id="summarize" aria-label="Generate summary">
+          <!-- Flash/bolt icon -->
+          <svg
+            class="btn-icon flash"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            role="img"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path fill="currentColor" d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
+          </svg>
+          <span>Generate Summary</span>
+        </button>
       </div>
-      <button id="copy-btn" style="display: none">Copy</button>
 
-      <style>
-        /* Ensure the result container is a positioning context */
-        #result {
-          position: relative;
-        }
+      <div id="result">
+        <div id="summary-content">
+          Select a summary type and click
+          <span style="font-weight: 700; color: #f13737">Generate Summary</span>
+          to generate a summary.
+        </div>
+        <button id="copy-btn" style="display: none">Copy</button>
 
-        /* Place the copy button fixed to the bottom-right inside #result */
-        #copy-btn {
-          position: absolute;
-          bottom: 10px;
-          right: 10px;
-          z-index: 10;
-          padding: 6px 10px;
-          font-size: 10px;
-          cursor: pointer;
-        }
+        <style>
+          /* Ensure the result container is a positioning context */
+          #result {
+            position: relative;
+          }
 
-        /* Optional small visual tweak to keep button visible on varied backgrounds */
-        #copy-btn {
-          background: #1800ad;
-          color: #fff;
-          border: none;
-          border-radius: 100px;
-        }
-        #copy-btn:hover {
-          opacity: 0.95;
-        }
-      </style>
+          /* Place the copy button fixed to the bottom-right inside #result */
+          #copy-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 10;
+            padding: 6px 10px;
+            font-size: 10px;
+            cursor: pointer;
+          }
+
+          /* Optional small visual tweak to keep button visible on varied backgrounds */
+          #copy-btn {
+            background: #1800ad;
+            color: #fff;
+            border: none;
+            border-radius: 100px;
+          }
+          #copy-btn:hover {
+            opacity: 0.95;
+          }
+        </style>
+      </div>
+    </div>
+
+    <!-- History Tab Content -->
+    <div class="tab-content" id="history-tab">
+      <div class="history-container">
+        <p class="empty-state">No history yet. Generate your first summary!</p>
+      </div>
+    </div>
+
+    <!-- Settings Tab Content -->
+    <div class="tab-content" id="settings-tab">
+      <div class="settings-container">
+        <p class="settings-info">Settings will be available soon.</p>
+      </div>
     </div>
 
     <script src="config.js"></script>
