@@ -140,7 +140,109 @@
     <!-- Settings Tab Content -->
     <div class="tab-content" id="settings-tab">
       <div class="settings-container">
-        <p class="settings-info">Settings will be available soon.</p>
+        <!-- Summary Settings Section -->
+        <div class="settings-section">
+          <div class="settings-section-header">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="section-icon"
+            >
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M12 1v6m0 6v6m7.07-13.07l-4.24 4.24m-5.66 5.66-4.24 4.24m13.07 0l-4.24-4.24m-5.66-5.66L1.93 1.93"
+              ></path>
+            </svg>
+            <span>Summary Settings</span>
+          </div>
+
+          <div class="settings-item">
+            <div class="settings-item-content">
+              <div class="settings-item-title">Auto-detect Language</div>
+              <div class="settings-item-description">
+                Automatically detect the language of the content
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="auto-detect-language" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-item">
+            <div class="settings-item-content">
+              <div class="settings-item-title">Readability Score</div>
+              <div class="settings-item-description">
+                Show readability assessment for summaries
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="readability-score" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Notification Settings Section -->
+        <div class="settings-section">
+          <div class="settings-section-header">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="section-icon"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notification Settings</span>
+          </div>
+
+          <div class="settings-item">
+            <div class="settings-item-content">
+              <div class="settings-item-title">
+                Summary Ready Alert
+                <span class="pro-badge">PRO</span>
+              </div>
+              <div class="settings-item-description">
+                Notify when summary is generated
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="summary-ready-alert" disabled />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-item">
+            <div class="settings-item-content">
+              <div class="settings-item-title">
+                Daily Summary Report
+                <span class="pro-badge">PRO</span>
+              </div>
+              <div class="settings-item-description">
+                Send daily summary of your activity
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="daily-summary-report" disabled />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 

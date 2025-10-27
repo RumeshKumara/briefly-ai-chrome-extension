@@ -20,11 +20,28 @@ document.addEventListener("DOMContentLoaded", () => {
       if (btn.getAttribute("data-tab") === "history") {
         loadHistory();
       }
+
+      // Load settings when Settings tab is clicked
+      if (btn.getAttribute("data-tab") === "settings") {
+        loadSettings();
+      }
     });
   });
 
   // Load history on initial load
   loadHistory();
+
+  // Load settings on initial load
+  loadSettings();
+
+  // Settings event listeners
+  document.getElementById("auto-detect-language").addEventListener("change", (e) => {
+    chrome.storage.sync.set({ autoDetectLanguage: e.target.checked });
+  });
+
+  document.getElementById("readability-score").addEventListener("change", (e) => {
+    chrome.storage.sync.set({ readabilityScore: e.target.checked });
+  });
 
   // Clear history button
   document.getElementById("clear-history-btn").addEventListener("click", () => {
@@ -355,4 +372,16 @@ Article to summarize:\n\n${truncatedText}`;
     console.error("Error calling Gemini API:", error);
     throw new Error("Failed to generate summary. Please try again later.");
   }
+}
+
+// Load and apply settings
+function loadSettings() {
+  chrome.storage.sync.get(["autoDetectLanguage", "readabilityScore"], (result) => {
+    // Set default values if not set
+    const autoDetectLanguage = result.autoDetectLanguage !== undefined ? result.autoDetectLanguage : true;
+    const readabilityScore = result.readabilityScore !== undefined ? result.readabilityScore : true;
+
+    document.getElementById("auto-detect-language").checked = autoDetectLanguage;
+    document.getElementById("readability-score").checked = readabilityScore;
+  });
 }
